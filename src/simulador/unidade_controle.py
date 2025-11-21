@@ -25,7 +25,6 @@ class UnidadeControle:
 
     @staticmethod
     def extrair_opcode(instrucao_32bits: int) -> int:
-        """Extrai os 8 bits mais significativos."""
         return (instrucao_32bits >> 24) & 0xFF
 
     @staticmethod
@@ -42,5 +41,4 @@ class UnidadeControle:
 
     @staticmethod
     def extrair_const16(instrucao_32bits: int) -> int:
-        """Extrai os 16 bits centrais para instruções LC_HI / LC_LO."""
         return (instrucao_32bits >> 8) & 0xFFFF

@@ -1,48 +1,61 @@
+from src.simulador.unidade_controle import UnidadeControle
+from src.simulador.instrucoes import Instrucoes
+from src.simulador.unidade_controle import UnidadeControle
+
+
 class Processador:
     def __init__(self):
-        # 32 registradores de 32 bits
         self.regs = [0] * 32
         
-        # Flags
         self.flag_neg = 0
         self.flag_zero = 0
         self.flag_carry = 0
         self.flag_overflow = 0
 
-        # Program Counter e Instruction Register
+        self.opcode = 0
+        self.ra = 0
+        self.rb = 0
+        self.rc = 0
+
+
         self.pc = 0
         self.ir = 0
 
-        # Memória de 64K palavras (endereçada a palavra)
         self.memoria = [0] * 65536
 
-        # Controle interno
         self.halted = False
 
     def carregar_programa(self, memoria_carregada):
-        """Recebe um dicionário {endereco: instrucao_binaria} do interpretador."""
+        
         for endereco, instrucao in memoria_carregada.items():
             self.memoria[endereco] = instrucao
 
     def ciclo_IF(self):
-        """Busca da instrução"""
+        
         self.ir = self.memoria[self.pc]
         self.pc += 1
 
     def ciclo_ID(self):
-        """Decodificação – não altera estado diretamente"""
+
+        self.opcode = UnidadeControle.extrair_opcode(self.ir)
+        self.ra = UnidadeControle.extrair_ra(self.ir)
+        self.rb = UnidadeControle.extrair_rb(self.ir)
+        self.rc = UnidadeControle.extrair_rc(self.ir)
+        
         pass
 
     def ciclo_EX(self):
-        """Execução – executa a instrução"""
-        pass
+        if self.opcode == UnidadeControle.OPCODES['ADD']: self.resultado_alu = Instrucoes.add(self, self.ra, self.rb)
+        elif self.opcode == UnidadeControle.OPCODES['SUB']: self.resultado_alu = Instrucoes.sub(self, self.ra, self.rb)
+    pass
 
     def ciclo_WB(self):
-        """Write Back – escreve resultados em registradores"""
-        pass
+        if hasattr(self, "resultado_alu"):
+            self.regs[self.rc] = self.resultado_alu
+            del self.resultado_alu
 
     def executar_ciclo(self):
-        """Executa os 4 estágios de uma instrução"""
+        
         if self.halted:
             return
 
@@ -51,6 +64,6 @@ class Processador:
         self.ciclo_EX()
         self.ciclo_WB()
 
-        # Detecção de HALT
+        
         if self.ir == 0xFFFFFFFF:
             self.halted = True
