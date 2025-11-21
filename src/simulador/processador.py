@@ -47,6 +47,13 @@ class Processador:
     def ciclo_EX(self):
         if self.opcode == UnidadeControle.OPCODES['ADD']: self.resultado_alu = Instrucoes.add(self, self.ra, self.rb)
         elif self.opcode == UnidadeControle.OPCODES['SUB']: self.resultado_alu = Instrucoes.sub(self, self.ra, self.rb)
+        elif self.opcode == UnidadeControle.OPCODES['ZERO']: self.resultado_alu = Instrucoes.zeros(self, self.rc)
+        elif self.opcode == UnidadeControle.OPCODES['XOR']: self.resultado_alu = Instrucoes.xor(self, self.ra, self.rb)
+        elif self.opcode == UnidadeControle.OPCODES['OR']: self.resultado_alu = Instrucoes.or_(self, self.ra, self.rb)
+        elif self.opcode == UnidadeControle.OPCODES['NOT']: self.resultado_alu = Instrucoes.not_(self, self.ra)
+        elif self.opcode == UnidadeControle.OPCODES['AND']: self.resultado_alu = Instrucoes.and_(self, self.ra, self.rb)
+        elif self.opcode == UnidadeControle.OPCODES['ASL']: self.resultado_alu = Instrucoes.asl(self, self.ra, self.rb)
+
     pass
 
     def ciclo_WB(self):

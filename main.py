@@ -3,7 +3,6 @@ from src.simulador.processador import Processador
 
 def main():
     caminho = "exemplos/add.txt"
-    print(f"Carregando '{caminho}'...")
 
     memoria = Interpretador.carregar_arquivo(caminho)
 
