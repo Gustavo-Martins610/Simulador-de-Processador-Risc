@@ -86,6 +86,7 @@ class Processador:
 
         elif self.opcode == UnidadeControle.OPCODES['J']: 
             endereco = UnidadeControle.extrair_endereco24(self.ir)
+            self.pc = endereco
             Instrucoes.jump(self, endereco)
 
         elif self.opcode == UnidadeControle.OPCODES['JAL']:
@@ -93,14 +94,19 @@ class Processador:
             Instrucoes.jal(self, endereco)
 
         elif self.opcode == UnidadeControle.OPCODES['JR']:
+            self.pc = self.regs[self.ra]
             Instrucoes.jr(self, self.ra)
 
         elif self.opcode == UnidadeControle.OPCODES['BEQ']:
             offset = UnidadeControle.extrair_rc(self.ir)
+            if self.regs[self.ra] == self.regs[self.rb]:
+                self.pc += offset
             Instrucoes.beq(self, self.ra, self.rb, offset)
         
         elif self.opcode == UnidadeControle.OPCODES['BNE']:
             offset = UnidadeControle.extrair_rc(self.ir)
+            if self.regs[self.ra] == self.regs[self.rb]:
+                self.pc += offset
             Instrucoes.bne(self, self.ra, self.rb, offset)
 
     def ciclo_WB(self):
