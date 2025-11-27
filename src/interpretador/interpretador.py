@@ -14,20 +14,27 @@ class Interpretador:
                     if linha == "":
                         continue
 
-                    if linha.startswith("address"):
+                    # Verifica se a linha começa com a diretiva 'address'
+                    if linha.lower().startswith("address"):
                         partes = linha.split()
                         if len(partes) != 2:
                             raise ValueError(f"Diretiva inválida: {linha}")
-                        endereco_atual = int(partes[1], 2)
+                        try:
+                            endereco_atual = int(partes[1], 2)  # Trata o endereço como binário
+                        except ValueError:
+                            raise ValueError(f"Endereço inválido na linha {linha}")
                         continue
 
-                    
+                    # Verificar se a linha tem exatamente 32 bits
                     if all(c in "01" for c in linha) and len(linha) == 32:
-                        instrucao = int(linha, 2)
-                        memoria_carregada[endereco_atual] = instrucao
-                        endereco_atual += 1
+                        try:
+                            instrucao = int(linha, 2)
+                            memoria_carregada[endereco_atual] = instrucao
+                            endereco_atual += 1
+                        except ValueError:
+                            raise ValueError(f"Erro ao processar instrução binária: {linha}")
                     else:
-                        raise ValueError(f"Linha inválida encontrada: {linha}")
+                        raise ValueError(f"Linha inválida encontrada: {linha} (Deve ter exatamente 32 bits de '0' ou '1')")
 
         except FileNotFoundError:
             raise FileNotFoundError(f"O arquivo {caminho} não foi encontrado.")
