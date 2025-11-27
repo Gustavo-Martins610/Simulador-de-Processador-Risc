@@ -5,8 +5,8 @@ from src.simulador.processador import Processador
 
 def main():
     # 1. Definir caminhos
-    caminho_assembly = "exemplos/test_const.asm" # Arquivo de entrada em Assembly
-    caminho_binario = "bin/test_const.bin" # Arquivo de saída em Binário
+    caminho_assembly = "exemplos/test_all.asm" # Arquivo de entrada em Assembly
+    caminho_binario = "bin/test_all.bin" # Arquivo de saída em Binário
 
     # 2. Criar a pasta 'bin' se não existir
     os.makedirs(os.path.dirname(caminho_binario), exist_ok=True)
