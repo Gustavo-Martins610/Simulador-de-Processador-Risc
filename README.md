@@ -4,9 +4,9 @@ Este projeto implementa um simulador funcional para o processador RISC de 32 bit
 
 ## Integrantes do Grupo
 
-- Gustavo Martins de oliveira
-- Diego Alves de Oliveira
 - Caio Bueno Finnochio Martins
+- Diego Alves de Oliveira
+- Gustavo Martins de Oliveira
 - Luiz Felipe de Souza Marques
 - Matheus Gomes Monteiro
 
