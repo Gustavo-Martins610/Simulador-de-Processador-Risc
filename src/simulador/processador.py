@@ -1,6 +1,6 @@
 from src.simulador.unidade_controle import UnidadeControle
 from src.simulador.instrucoes import Instrucoes
-from src.simulador.unidade_controle import UnidadeControle
+from src.simulador.opcodes import OPCODES
 
 
 class Processador:
@@ -88,10 +88,6 @@ class Processador:
             endereco = UnidadeControle.extrair_endereco24(self.ir)
             self.pc = endereco
             Instrucoes.jump(self, endereco)
-
-        elif self.opcode == UnidadeControle.OPCODES['JAL']:
-            endereco = UnidadeControle.extrair_endereco24(self.ir)
-            Instrucoes.jal(self, endereco)
 
         elif self.opcode == UnidadeControle.OPCODES['JR']:
             self.pc = self.regs[self.ra]

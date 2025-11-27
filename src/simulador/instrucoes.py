@@ -225,11 +225,6 @@ class Instrucoes:
     @staticmethod
     def jump(cpu, endereco24):
         cpu.pc = endereco24 & 0xFFFFFF
-
-    @staticmethod
-    def jal(cpu, endereco24):
-        cpu.regs[31] = cpu.pc
-        cpu.pc = endereco24 & 0xFFFFFF
     
     @staticmethod
     def jr(cpu, ra):
