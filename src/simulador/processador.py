@@ -101,25 +101,19 @@ class Processador:
             self.resultado_alu = Instrucoes.load(self, self.ra, self.rc)
         elif self.opcode == UnidadeControle.OPCODES['STORE']:
             Instrucoes.store(self, self.ra, self.rc)
-            if hasattr(self, "resultado_alu"):
-                del self.resultado_alu
+        
+        # Controle de Fluxo
         elif self.opcode == UnidadeControle.OPCODES['J']:
             endereco = UnidadeControle.extrair_endereco24(self.ir)
-            self.pc = endereco  # Atualiza o PC com o endereço de desvio
             Instrucoes.jump(self, endereco)
         elif self.opcode == UnidadeControle.OPCODES['JR']:
-            self.pc = self.regs[self.ra]  # Atualiza o PC com o valor do registrador
             Instrucoes.jr(self, self.ra)
         elif self.opcode == UnidadeControle.OPCODES['BEQ']:
-            offset = UnidadeControle.extrair_rc(self.ir)
-            if self.regs[self.ra] == self.regs[self.rb]:
-                self.pc += offset  # Se for igual, faz o desvio
-            Instrucoes.beq(self, self.ra, self.rb, offset)
+            # O offset de 8 bits está armazenado em self.rc (bits 0-7)
+            Instrucoes.beq(self, self.ra, self.rb, self.rc)
         elif self.opcode == UnidadeControle.OPCODES['BNE']:
-            offset = UnidadeControle.extrair_rc(self.ir)
-            if self.regs[self.ra] != self.regs[self.rb]:
-                self.pc += offset  # Se for diferente, faz o desvio
-            Instrucoes.bne(self, self.ra, self.rb, offset)
+            # O offset de 8 bits está armazenado em self.rc (bits 0-7)
+            Instrucoes.bne(self, self.ra, self.rb, self.rc)
 
     def ciclo_WB(self):
         """
@@ -142,8 +136,8 @@ class Processador:
         self.ciclo_IF()
         self.dump_estado("IF")
         
-        # Verifica se o PC ultrapassou o tamanho da memória, se sim, parar
-        if self.pc >= len(self.memoria) or self.pc < 0:
+        # Verifica se o PC ultrapassou o tamanho da memória ou se houve Halt no fetch
+        if self.halted or self.pc >= len(self.memoria) or self.pc < 0:
             self.halted = True
             return
         
@@ -153,10 +147,6 @@ class Processador:
         self.dump_estado("EX")
         self.ciclo_WB()
         self.dump_estado("WB")
-        
-        # Verifique se a instrução atual é um 'halt'
-        if self.ir == 0xFFFFFFFF:  # Geralmente, o halt é representado por 32 bits de 1
-            self.halted = True
 
     def dump_estado(self, ciclo_nome):
         """
@@ -171,7 +161,8 @@ class Processador:
         print()
         print("REGISTRADORES:")
         for i in range(32):
-            print(f"R{i:02} = {self.regs[i]}")
+            if self.regs[i] != 0: # Dica: Só mostre registradores com valor != 0 pra limpar a tela
+                print(f"R{i:02} = {self.regs[i]}")
         print()
         print("FLAGS:")
         print(f"NEG={self.flag_neg}  ZERO={self.flag_zero}  CARRY={self.flag_carry}  OVF={self.flag_overflow}")
