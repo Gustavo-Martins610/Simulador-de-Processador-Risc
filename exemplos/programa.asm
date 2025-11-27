@@ -17,8 +17,8 @@ lcl r2, 20
 add r3, r1, r2
 
 # Copia o valor de r3 para r4
-# passa r4, r3
-passa r4, r3
+# copy r4, r3
+copy r4, r3
 
 # Zera o registrador r5
 # zeros r5
