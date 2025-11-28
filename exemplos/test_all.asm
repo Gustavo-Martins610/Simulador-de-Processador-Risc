@@ -50,7 +50,7 @@ beq r4, r5, 2
 bne r6, r7, 4
 
 # 17. Jump incondicional para r8
-j 0x00000008
+j 18
 
 # 18. Finaliza a execução
 halt
