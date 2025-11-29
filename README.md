@@ -16,11 +16,13 @@ Este projeto implementa um simulador funcional para o processador **UFLA-RISC** 
 
 ## 🚀 Como Executar
 
-### 1. Clone o repositório
+### 1. Clone o repositório ou baixar o source code por meio da realise 1.0
 
 ```bash
 git clone https://github.com/Gustavo-Martins610/ufla-risc-simulador-grupo7
 ```
+Para baixar o source code, entre no repositório do projeto e verifique as tags
+Você irá encontrar a realease 1.0
 
 ### 2. **Configure o arquivo de entrada**
 
