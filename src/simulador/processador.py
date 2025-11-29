@@ -23,6 +23,12 @@ class Processador:
 
         self.halted = False
 
+         # Arquivo de log (criado automaticamente)
+        self.log_arquivo = open("execucao_dump.txt", "w", encoding="utf-8")
+
+        # Escreve cabeçalho no log
+        self.log_arquivo.write("===== INÍCIO DA EXECUÇÃO =====\n\n")
+
     def carregar_programa(self, memoria_carregada):
         """
         Carrega o programa na memória do processador
@@ -121,10 +127,11 @@ class Processador:
         """
         if self.halted:
             return
-        
         if hasattr(self, "resultado_alu"):
             self.regs[self.rc] = self.resultado_alu
+            self.ultimo_write_reg = (self.rc, self.resultado_alu)
             del self.resultado_alu
+
 
     def executar_ciclo(self):
         """
@@ -148,22 +155,33 @@ class Processador:
         self.ciclo_WB()
         self.dump_estado("WB")
 
+
+
+
+
     def dump_estado(self, ciclo_nome):
-        """
-        Imprime o estado atual do processador durante a execução.
-        """
-        print("\n" + "="*50)
-        print(f"ESTÁGIO: {ciclo_nome}")
-        print("-"*50)
-        print(f"PC  = {self.pc}")
-        print(f"IR  = {self.ir:032b}")
-        print(f"OP  = {self.opcode:08b}")
-        print()
-        print("REGISTRADORES:")
-        for i in range(32):
-            if self.regs[i] != 0: # Dica: Só mostre registradores com valor != 0 pra limpar a tela
-                print(f"R{i:02} = {self.regs[i]}")
-        print()
-        print("FLAGS:")
-        print(f"NEG={self.flag_neg}  ZERO={self.flag_zero}  CARRY={self.flag_carry}  OVF={self.flag_overflow}")
-        print("="*50)
+        linha1 = f"[{ciclo_nome}] PC={self.pc}  IR={self.ir:08X}  OP={self.opcode:02X}\n"
+
+        linhas = [linha1]
+
+             # Apenas quando houver escrita em registrador
+        if hasattr(self, "ultimo_write_reg"):
+            reg, val = self.ultimo_write_reg
+            linhas.append(f"WRITE -> R{reg:02} = {val}\n")
+            del self.ultimo_write_reg
+
+            # Flags só quando mudarem
+        flags = f"N={self.flag_neg} Z={self.flag_zero} C={self.flag_carry} O={self.flag_overflow}"
+        if getattr(self, "flags_anteriores", None) != flags:
+            linhas.append(f"FLAGS -> {flags}\n")
+            self.flags_anteriores = flags
+
+         # ==== IMPRIME NO TERMINAL ====
+        for linha in linhas:
+            print(linha, end="")
+
+         # ==== ESCREVE NO ARQUIVO ====
+        for linha in linhas:
+            self.log_arquivo.write(linha)
+
+        self.log_arquivo.flush()  # garante salvar imediatamente
