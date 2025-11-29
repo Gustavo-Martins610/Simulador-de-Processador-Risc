@@ -185,17 +185,13 @@ class Instrucoes:
 
     @staticmethod
     def beq(cpu, ra, rb, offset_byte):
-        # Correção: Converter byte unsigned (0-255) para signed (-128 a 127)
-        # Se for > 127 (ex: 255), significa -1 em complemento de 2
         offset = (offset_byte - 256) if offset_byte > 127 else offset_byte
 
         if cpu.regs[ra] == cpu.regs[rb]:
-            # PC já foi incrementado no ciclo IF, então subtraímos 1 para ajustar
             cpu.pc = cpu.pc + offset - 1
 
     @staticmethod
     def bne(cpu, ra, rb, offset_byte):
-        # Correção: Converter byte unsigned (0-255) para signed (-128 a 127)
         offset = (offset_byte - 256) if offset_byte > 127 else offset_byte
 
         if cpu.regs[ra] != cpu.regs[rb]:
