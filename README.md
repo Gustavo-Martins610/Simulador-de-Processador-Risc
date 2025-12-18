@@ -1,4 +1,4 @@
-# 🖥️ Simulador Funcional do Processador UFLA-RISC
+# 🖥️ Simulador Funcional do Processador UFLA-RISC - Disciplina de Arquitetura de Computadores II
 
 Este projeto implementa um simulador funcional para o processador **UFLA-RISC** de 32 bits, permitindo a execução e análise de um conjunto de instruções básicas — incluindo operações aritméticas, lógicas, de controle de fluxo, memória e manipulação de bits.
 
